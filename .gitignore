@@ -1,0 +1,12 @@
+manifests/.forgejo-secrets.yaml.swp
+.bash_history
+.bash_logout
+.bashrc
+.cache/
+.docker/
+.git/
+.gitconfig
+.kube/
+.minikube/
+.profile
+.ssh/
