@@ -3,28 +3,62 @@ kind: StatefulSet
 metadata:
   name: postgres-db-ss
 spec:
-  serviceName: postgres-db
-  replicas: 1
   selector:
     matchLabels:
       app: postgres-db
+  serviceName: "postgres-db"
+  replicas: 1
   template:
     metadata:
       labels:
         app: postgres-db
     spec:
+      initContainers:
+      - name: import-dump-if-empty
+        image: postgres:latest
+        command:
+          - sh
+          - -c
+          - |
+            cp /init/dump.sql /tmp/dump.sql
+            if psql -h postgres-db -U "$POSTGRES_USER" -d forgejo -tAc "SELECT 1 FROM \"user\" LIMIT 1" | grep -q 1; then
+              echo "Database already initialized. Skipping import."
+            else
+              echo "Importing initial admin user..."
+              psql -h postgres-db -U "$POSTGRES_USER" -d forgejo -f /tmp/dump.sql
+            fi
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-db-secrets
+                key: POSTGRES_USER
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-db-secrets
+                key: POSTGRES_PASSWORD
+        volumeMounts:
+          - name: dump-volume
+            mountPath: /init
+
       containers:
       - name: postgres-db
         image: postgres:latest
         ports:
-          - containerPort: 5432
+        - containerPort: 5432
+          name: postgres
         envFrom:
-          - secretRef:
-              name: postgres-db-secrets
+        - secretRef:
+            name: postgres-db-secrets
         volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-db-volume
+        - name: postgres-db-volume
+          mountPath: /var/lib/postgresql/data
+
       volumes:
       - name: postgres-db-volume
         persistentVolumeClaim:
           claimName: postgres-db-pvc
+      - name: dump-volume
+        secret:
+          secretName: forgejo-dump

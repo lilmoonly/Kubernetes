@@ -1,3 +1,4 @@
+manifests/admin_dump.sql
 manifests/.forgejo-secrets.yaml.swp
 .bash_history
 .bash_logout
