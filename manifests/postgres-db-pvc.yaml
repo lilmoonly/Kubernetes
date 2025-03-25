@@ -5,6 +5,7 @@ metadata:
   labels:
     app: postgres-db
 spec:
+  storageClassName: manual 
   resources:
     requests:
       storage: 200Mi

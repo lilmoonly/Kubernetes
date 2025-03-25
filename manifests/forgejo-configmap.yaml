@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: forgejo-config
+  name: forgejo-configs
 data:
   FORGEJO_APP_NAME: "Forgejo"
   FORGEJO_HTTP_PORT: "3000"
@@ -10,7 +10,7 @@ data:
   FORGEJO_SSH_DOMAIN: "192.168.20.35"
   FORGEJO_HTTP_ADDR: "0.0.0.0"
   FORGEJO_DB_TYPE: "postgres"
-  FORGEJO_DB_HOST: "postgres"
+  FORGEJO_DB_HOST: "postgres-db"
   FORGEJO_DB_PORT: "5432"
   FORGEJO_DB_NAME: "forgejo"
 
