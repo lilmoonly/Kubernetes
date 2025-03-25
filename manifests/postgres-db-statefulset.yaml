@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-db-ss
+spec:
+  serviceName: postgres-db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-db
+  template:
+    metadata:
+      labels:
+        app: postgres-db
+    spec:
+      containers:
+      - name: postgres-db
+        image: postgres:latest
+        ports:
+          - containerPort: 5432
+        envFrom:
+          - secretRef:
+              name: forgejo-secrets
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-db-volume
+      volumes:
+      - name: postgres-db-volume
+        persistentVolumeClaim:
+          claimName: postgres-db-pvc

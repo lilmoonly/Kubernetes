@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forgejo-app
+spec:
+  selector:
+    matchLabels:
+      app: forgejo-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: forgejo-app
+    spec:
+      containers:
+        - name: forgejo-app
+          image: ghcr.io/lilmoonly/forgejo-ghcr:latest
+          imagePullPolicy: "Always"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: forgejo-configs
+            - secretRef:
+                name: forgejo-secrets
+         
