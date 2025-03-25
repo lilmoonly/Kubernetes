@@ -20,7 +20,7 @@ spec:
           - containerPort: 5432
         envFrom:
           - secretRef:
-              name: postgres-db-secret
+              name: postgres-db-secrets
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: postgres-db-volume

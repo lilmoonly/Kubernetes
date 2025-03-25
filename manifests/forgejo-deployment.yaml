@@ -29,4 +29,5 @@ spec:
                 name: forgejo-configs
             - secretRef:
                 name: postgres-db-secrets
-         
+            - secretRef: 
+                name: forgejo-secrets
