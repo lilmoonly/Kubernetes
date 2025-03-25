@@ -12,6 +12,8 @@ spec:
       labels:
         app: forgejo-app
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: forgejo-app
           image: ghcr.io/lilmoonly/forgejo-ghcr:latest
@@ -26,5 +28,5 @@ spec:
             - configMapRef:
                 name: forgejo-configs
             - secretRef:
-                name: forgejo-secrets
+                name: postgres-db-secrets
          

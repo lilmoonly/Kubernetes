@@ -20,7 +20,7 @@ spec:
           - containerPort: 5432
         envFrom:
           - secretRef:
-              name: forgejo-secrets
+              name: postgres-db-secret
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: postgres-db-volume
