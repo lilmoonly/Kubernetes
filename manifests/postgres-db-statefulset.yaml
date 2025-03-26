@@ -13,35 +13,6 @@ spec:
       labels:
         app: postgres-db
     spec:
-      initContainers:
-      - name: import-dump-if-empty
-        image: postgres:latest
-        command:
-          - sh
-          - -c
-          - |
-            cp /init/dump.sql /tmp/dump.sql
-            if psql -h postgres-db -U "$POSTGRES_USER" -d forgejo -tAc "SELECT 1 FROM \"user\" LIMIT 1" | grep -q 1; then
-              echo "Database already initialized. Skipping import."
-            else
-              echo "Importing initial admin user..."
-              psql -h postgres-db -U "$POSTGRES_USER" -d forgejo -f /tmp/dump.sql
-            fi
-        env:
-          - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                name: postgres-db-secrets
-                key: POSTGRES_USER
-          - name: PGPASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: postgres-db-secrets
-                key: POSTGRES_PASSWORD
-        volumeMounts:
-          - name: dump-volume
-            mountPath: /init
-
       containers:
       - name: postgres-db
         image: postgres:latest
@@ -54,6 +25,8 @@ spec:
         volumeMounts:
         - name: postgres-db-volume
           mountPath: /var/lib/postgresql/data
+        - name: dump-volume
+          mountPath: /docker-entrypoint-initdb.d
 
       volumes:
       - name: postgres-db-volume
