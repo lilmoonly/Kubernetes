@@ -12,3 +12,28 @@ prometheus-blackbox-exporter:
   enabled: true
   serviceMonitor:
     enabled: true
+
+# Виправлення node-exporter
+prometheus-node-exporter:
+  enabled: true
+
+  serviceMonitor:
+    enabled: true
+    # НЕ вказуємо jobLabel — це важливо!
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: prometheus-node-exporter
+        app.kubernetes.io/instance: prometheus
+    namespace: monitoring
+    interval: 30s
+    scrapeTimeout: 10s
+
+  rbac:
+    create: true
+
+  resources:
+    limits:
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi

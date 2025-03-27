@@ -7,10 +7,11 @@ serviceMonitor:
 
 extendedMetrics: true
 
-env:
-  - name: DATA_SOURCE_NAME
-    valueFrom:
-      secretKeyRef:
-        name: postgres-exporter-secret
-        key: DATA_SOURCE_NAME
-
+config:
+  datasource:
+    host: "postgres-db.default.svc.cluster.local"
+    port: "5432"
+    user: "forgejo"
+    password: "password"
+    database: "forgejo"
+    sslmode: "disable"
