@@ -1,0 +1,52 @@
+# PostgreSQL section
+postgres:
+  image: postgres:latest
+  storage: 200Mi
+  storagePath: /mnt/data
+  service:
+    name: postgres-db
+    port: 5432
+  credentials:
+    user:
+    password:
+  dump:
+    enabled: true
+    mountPath: /docker-entrypoint-initdb.d
+    data: ""  # base64 SQL dump вставляється сюди
+
+# Forgejo section
+forgejo:
+  image:
+    repository: ghcr.io/lilmoonly/forgejo-ghcr
+    tag: latest
+    pullPolicy: Always
+    pullSecret: ghcr-secret
+  replicas: 2
+  service:
+    name: forgejo-app-service
+    port: 3000
+  ingress:
+    enabled: true
+    host: forgejo.local
+    path: /
+  config:
+    appName: "Forgejo"
+    httpPort: "3000"
+    rootUrl: "http://192.168.20.35:30000/"
+    domain: "192.168.20.35"
+    sshDomain: "192.168.20.35"
+    httpAddr: "0.0.0.0"
+    dbType: "postgres"
+    dbHost: postgres-db
+    dbPort: "5432"
+    dbName: forgejo
+  credentials:
+    dbUser:
+    dbPass:
+    secretKey: 
+
+# Image pull secret for GHCR
+imagePullSecret:
+  enabled: true
+  name: ghcr-secret
+  dockerconfigjson: ""  # base64 .dockerconfigjson

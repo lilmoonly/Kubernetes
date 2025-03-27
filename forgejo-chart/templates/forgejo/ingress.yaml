@@ -1,0 +1,20 @@
+{{- if .Values.forgejo.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: forgejo-ingress
+  labels:
+    name: forgejo-ingress
+spec:
+  rules:
+    - host: {{ .Values.forgejo.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.forgejo.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.forgejo.service.name }}
+                port:
+                  number: {{ .Values.forgejo.service.port }}
+{{- end }}

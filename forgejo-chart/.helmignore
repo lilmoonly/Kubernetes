@@ -1,0 +1,28 @@
+# Common files to ignore
+.DS_Store
+*.swp
+*.bak
+*.tmp
+*.log
+
+# Version control
+.git/
+.gitignore
+
+# OS and editor metadata
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Helm output
+charts/
+Chart.lock
+values.schema.json
+
+# Tests and examples (optional)
+test/
+examples/

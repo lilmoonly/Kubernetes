@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-db-ss
+spec:
+  serviceName: {{ .Values.postgres.service.name }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-db
+  template:
+    metadata:
+      labels:
+        app: postgres-db
+    spec:
+      containers:
+        - name: postgres-db
+          image: {{ .Values.postgres.image }}
+          ports:
+            - containerPort: {{ .Values.postgres.service.port }}
+              name: postgres
+          envFrom:
+            - secretRef:
+                name: postgres-db-secrets
+          volumeMounts:
+            - name: postgres-db-volume
+              mountPath: /var/lib/postgresql/data
+            {{- if .Values.postgres.dump.enabled }}
+            - name: dump-volume
+              mountPath: {{ .Values.postgres.dump.mountPath }}
+            {{- end }}
+      volumes:
+        - name: postgres-db-volume
+          persistentVolumeClaim:
+            claimName: postgres-db-pvc
+        {{- if .Values.postgres.dump.enabled }}
+        - name: dump-volume
+          secret:
+            secretName: forgejo-dump
+        {{- end }}
