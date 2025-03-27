@@ -50,3 +50,4 @@ imagePullSecret:
   enabled: true
   name: ghcr-secret
   dockerconfigjson: ""  # base64 .dockerconfigjson
+

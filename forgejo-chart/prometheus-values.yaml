@@ -1,0 +1,14 @@
+# Disable faulty Prometheus targets (Minikube etc)
+kubeControllerManager:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+prometheus-blackbox-exporter:
+  enabled: true
+  serviceMonitor:
+    enabled: true
